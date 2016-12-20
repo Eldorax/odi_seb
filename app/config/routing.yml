@@ -34,9 +34,26 @@ panier_list:
     path: /panier/list/{message}
     defaults: {_controller: AppBundle:Client:panierList, message: ''}
     
+panier_mod:
+    path: /client/commander/{numpanier}/{message}
+    defaults: {_controller: AppBundle:Client:ModPanier, message: ''}
+    
 delete_panier:
     path: /panier/delete/{numpanier}
     defaults: {_controller: AppBundle:Client:DeletePanier, numpanier: 0}
+    
+new_panier:
+    path: /panier/create
+    defaults: {_controller: AppBundle:Client:newPanier}
+    
+delete_produit_panier:
+    path: /panier/delete/{numpanier}/{numproduit}
+    defaults: {_controller: AppBundle:Client:DeleteproduitPanier}
+    
+add_produit_panier:
+    path: /panier/add/{numpanier}/{numproduit}
+    defaults: {_controller: AppBundle:Client:addProduitPanier}
+
 
 
 
