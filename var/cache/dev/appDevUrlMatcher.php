@@ -100,9 +100,32 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
 
         }
 
-        // listproduit
-        if (0 === strpos($pathinfo, '/produits/list') && preg_match('#^/produits/list(?:/(?P<message>[^/]++))?$#s', $pathinfo, $matches)) {
-            return $this->mergeDefaults(array_replace($matches, array('_route' => 'listproduit')), array (  '_controller' => 'AppBundle\\Controller\\ProduitController::listProduitAction',  'message' => '',));
+        // interface_magasinier
+        if ($pathinfo === '/magasinier/interface') {
+            return array (  '_controller' => 'AppBundle\\Controller\\MagasinierController::interfaceAction',  '_route' => 'interface_magasinier',);
+        }
+
+        if (0 === strpos($pathinfo, '/produits')) {
+            // ajoutproduit
+            if (0 === strpos($pathinfo, '/produits/ajouter') && preg_match('#^/produits/ajouter(?:/(?P<message>[^/]++))?$#s', $pathinfo, $matches)) {
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'ajoutproduit')), array (  '_controller' => 'AppBundle\\Controller\\ProduitController::ajouterProduitAction',  'message' => '',));
+            }
+
+            // modifierstock
+            if (0 === strpos($pathinfo, '/produits/modifier') && preg_match('#^/produits/modifier(?:/(?P<message>[^/]++))?$#s', $pathinfo, $matches)) {
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'modifierstock')), array (  '_controller' => 'AppBundle\\Controller\\ProduitController::modifierProduitAction',  'message' => '',));
+            }
+
+            // telechargement
+            if ($pathinfo === '/produits/telechargement') {
+                return array (  '_controller' => 'AppBundle\\Controller\\ProduitController::telechargerProduitAction',  'message' => '',  '_route' => 'telechargement',);
+            }
+
+            // listproduit
+            if (0 === strpos($pathinfo, '/produits/list') && preg_match('#^/produits/list(?:/(?P<message>[^/]++))?$#s', $pathinfo, $matches)) {
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'listproduit')), array (  '_controller' => 'AppBundle\\Controller\\ProduitController::listProduitAction',  'message' => '',));
+            }
+
         }
 
         if (0 === strpos($pathinfo, '/auth')) {
@@ -122,11 +145,6 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
 
         }
 
-        // interface_magasinier
-        if ($pathinfo === '/magasinier/interface') {
-            return array (  '_controller' => 'AppBundle\\Controller\\MagasinierController::interfaceAction',  '_route' => 'interface_magasinier',);
-        }
-
         // interface_client
         if ($pathinfo === '/client/interface') {
             return array (  '_controller' => 'AppBundle\\Controller\\ClientController::interfaceAction',  '_route' => 'interface_client',);
@@ -142,59 +160,25 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
             return $this->mergeDefaults(array_replace($matches, array('_route' => 'panier_mod')), array (  '_controller' => 'AppBundle\\Controller\\ClientController::ModPanierAction',  'message' => '',));
         }
 
-        if (0 === strpos($pathinfo, '/p')) {
-            if (0 === strpos($pathinfo, '/panier')) {
-                // delete_panier
-                if (0 === strpos($pathinfo, '/panier/delete') && preg_match('#^/panier/delete(?:/(?P<numpanier>[^/]++))?$#s', $pathinfo, $matches)) {
-                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'delete_panier')), array (  '_controller' => 'AppBundle\\Controller\\ClientController::DeletePanierAction',  'numpanier' => 0,));
-                }
-
-                // new_panier
-                if ($pathinfo === '/panier/create') {
-                    return array (  '_controller' => 'AppBundle\\Controller\\ClientController::newPanierAction',  '_route' => 'new_panier',);
-                }
-
-                // delete_produit_panier
-                if (0 === strpos($pathinfo, '/panier/delete') && preg_match('#^/panier/delete/(?P<numpanier>[^/]++)/(?P<numproduit>[^/]++)$#s', $pathinfo, $matches)) {
-                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'delete_produit_panier')), array (  '_controller' => 'AppBundle\\Controller\\ClientController::DeleteproduitPanierAction',));
-                }
-
-                // add_produit_panier
-                if (0 === strpos($pathinfo, '/panier/add') && preg_match('#^/panier/add/(?P<numpanier>[^/]++)/(?P<numproduit>[^/]++)$#s', $pathinfo, $matches)) {
-                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'add_produit_panier')), array (  '_controller' => 'AppBundle\\Controller\\ClientController::addProduitPanierAction',));
-                }
-
+        if (0 === strpos($pathinfo, '/panier')) {
+            // delete_panier
+            if (0 === strpos($pathinfo, '/panier/delete') && preg_match('#^/panier/delete(?:/(?P<numpanier>[^/]++))?$#s', $pathinfo, $matches)) {
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'delete_panier')), array (  '_controller' => 'AppBundle\\Controller\\ClientController::DeletePanierAction',  'numpanier' => 0,));
             }
 
-            if (0 === strpos($pathinfo, '/personne')) {
-                // addpersonne
-                if ($pathinfo === '/personne/add') {
-                    return array (  '_controller' => 'AppBundle\\Controller\\PersonneController::addPersonneAction',  '_route' => 'addpersonne',);
-                }
-
-                // updatepersonne
-                if (0 === strpos($pathinfo, '/personne/update') && preg_match('#^/personne/update/(?P<nompersonne>[^/]++)/(?P<prenompersonne>[^/]++)$#s', $pathinfo, $matches)) {
-                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'updatepersonne')), array (  '_controller' => 'AppBundle\\Controller\\PersonneController::updatePersonneAction',));
-                }
-
+            // new_panier
+            if ($pathinfo === '/panier/create') {
+                return array (  '_controller' => 'AppBundle\\Controller\\ClientController::newPanierAction',  '_route' => 'new_panier',);
             }
 
-        }
-
-        if (0 === strpos($pathinfo, '/lieu')) {
-            // listlieux
-            if (0 === strpos($pathinfo, '/lieu/list.html') && preg_match('#^/lieu/list\\.html(?:/(?P<message>[^/]++))?$#s', $pathinfo, $matches)) {
-                return $this->mergeDefaults(array_replace($matches, array('_route' => 'listlieux')), array (  '_controller' => 'AppBundle:Lieu:listLieu',  'message' => '',));
+            // delete_produit_panier
+            if (0 === strpos($pathinfo, '/panier/delete') && preg_match('#^/panier/delete/(?P<numpanier>[^/]++)/(?P<numproduit>[^/]++)$#s', $pathinfo, $matches)) {
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'delete_produit_panier')), array (  '_controller' => 'AppBundle\\Controller\\ClientController::DeleteproduitPanierAction',));
             }
 
-            // deletelieux
-            if (0 === strpos($pathinfo, '/lieu/deletelieu.html') && preg_match('#^/lieu/deletelieu\\.html(?:/(?P<message>[^/]++))?$#s', $pathinfo, $matches)) {
-                return $this->mergeDefaults(array_replace($matches, array('_route' => 'deletelieux')), array (  '_controller' => 'AppBundle:Lieu:deleteLieu',  'message' => '',));
-            }
-
-            // updatelieu
-            if (0 === strpos($pathinfo, '/lieu/updatelieu.html') && preg_match('#^/lieu/updatelieu\\.html(?:/(?P<lieu_id>[^/]++))?$#s', $pathinfo, $matches)) {
-                return $this->mergeDefaults(array_replace($matches, array('_route' => 'updatelieu')), array (  '_controller' => 'AppBundle:Lieu:updateLieu',  'lieu_id' => '',));
+            // add_produit_panier
+            if (0 === strpos($pathinfo, '/panier/add') && preg_match('#^/panier/add/(?P<numpanier>[^/]++)/(?P<numproduit>[^/]++)$#s', $pathinfo, $matches)) {
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'add_produit_panier')), array (  '_controller' => 'AppBundle\\Controller\\ClientController::addProduitPanierAction',));
             }
 
         }

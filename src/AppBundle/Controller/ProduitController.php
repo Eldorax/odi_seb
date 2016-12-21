@@ -1,51 +1,160 @@
 <?php
 namespace AppBundle\Controller;
 use AppBundle\Form\Type\ProduitType;
+use AppBundle\Form\Type\AjoutProduitType;
+use AppBundle\Form\Type\ModifProduitType;
 use AppBundle\Entity\Produit;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Doctrine\ORM\Id\SequenceGenerator;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 class ProduitController extends Controller {
     
-    public function listProduitAction($message)
+    public function listProduitAction(Request $request, $message)
+    {
+        $session = $request->getSession();
+        $em = $this->getDoctrine()->getManager();
+        if( $session->get('access') == 'magasinier' )
+        {
+            $produit = new Produit();
+            $form = $this->createForm(ProduitType::class, $produit);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid())
+            {
+                // Recherche un user correspondant.
+                $temp = new \Doctrine\Common\Collections\ArrayCollection;
+                $produit = $form->getData();
+                $temp=$produit->getVisible();
+                $tableau = $temp->toArray();
+                for ($i = 0; $i < count($tableau); $i++)
+                {
+                    $produit = $tableau[$i];
+                    if ($produit->getVisible() == 1)
+                        $produit->setVisible (0);
+                    else
+                        $produit->setVisible (1);
+                    $em->persist($produit);
+                    $em->flush();
+                }
+            }
+            $produits = $em->getRepository(Produit::class)->findAll();
+            return $this->render('form/magasinier/list_produits.html.twig', 
+                        array('form'=> $form->createView(),
+                            'msg' => $message,
+                            'produits' => $produits)) ;
+        }
+        else
+        {
+            $produits = $em->getRepository(Produit::class)->findBy(array('visible' => true));
+            return $this->render('produits/list_produits.twig',
+                            ['produits' => $produits, 'msg' => $message]);
+        }
+    }
+    
+    public function ajouterProduitAction(Request $request, $message) 
     {
         $em = $this->getDoctrine()->getManager();
-        $produits = $em->getRepository(Produit::class)->findBy(array('visible' => true));
-        return $this->render('produits/list_produits.twig',
-                            ['produits' => $produits, 'msg' => $message]);
+        $session = $request->getSession();
+        if( $session->get('access') == 'magasinier' )
+        {
+            $produit = new Produit();
+            $temp = new Produit();
+            //$file = new UploadedFile;
+            $dir = '/home/jdev/Images';
+            $form = $this->createForm(AjoutProduitType::class, $produit);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid())
+            {
+                $produit = $form->getData();
+                
+                /*$file = $produit->getPhoto();
+                if ($file->isValid())
+                {
+                //$extension = $file->guessExtension();
+                //if(!$extension)
+                //    $extension = 'img';
+                //$endfile = rand(1,99999).'.'.$extension;
+                    $file->move($dir, 'photo.jpg');
+                //$produit->setPhoto($dir.$endfile);
+                }
+                else
+                    $produit->setPhoto($file->getErrorMessage());*/
+                $produits = $em->getRepository(Produit::class)->findAll();
+                
+                if( count($produits) > 0)
+                {
+                    $temp   = $produits[0];
+                    $newId  = $temp->getNumproduit();
+                    for ($i = 1; $i < count($produits); $i++)
+                    {
+                        $temp = $produits[$i];
+                        if($temp->getNumproduit() > $newId)
+                        {
+                            $newId = $temp->getNumproduit();
+                        }
+                    }
+                }
+                else 
+                {
+                    $newId = -1;
+                }
+                $produit->setnumproduit($newId + 1);
+                $em->persist($produit);
+                $em->flush();
+                $message = 'Produit ajouter';
+            }
+            return $this->render('form/magasinier/ajout_produits.html.twig', 
+                        array('form'=> $form->createView(),
+                            'msg' => $message));
+        }
+        else
+        {
+            
+        }
     }
     
-    public function addProduitAction(Request $request) {
-        
-        // creer le formulaire
-        $personne = new Personne();
-        $form = $this->createForm(PersonneType::class, $personne);
-        return $this->handleForm($form, $personne, $request);
-    }
-    
-    public function updateProduitAction(Request $request, $nompersonne, $prenompersonne) {
-        
+    public function modifierProduitAction(Request $request, $message) 
+    {   
         $em = $this->getDoctrine()->getManager();
-        // recup en utilisant les 2 colonnes de la cle primaire
-        $personne = $em->getRepository(Personne::class)->findById($nompersonne, $prenompersonne);
-        $form = $this->createForm(PersonneType::class, $personne);
-        
-        return $this->handleForm($form, $personne, $request);
+        $session = $request->getSession();
+        if( $session->get('access') == 'magasinier' )
+        {
+            $produit = new Produit();
+            $form = $this->createForm(ModifProduitType::class, $produit);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid())
+            {
+                $produit = $form->getData();
+                $ajout = $produit->getQte();
+                $produit = $produit->getNumproduit();
+                $produit->setQte($produit->getQte() + $ajout);
+                $message = 'Ajout effectué';
+                $em->persist($produit);
+                $em->flush();
+            }
+            return $this->render('form/magasinier/modif_produits.html.twig', 
+                        array('form'=> $form->createView(),
+                            'msg' => $message));
+        }
+        else
+        {
+            
+        }
     }
-    
-    private function handleForm($form, Personne $personne, Request $request) {
-        // Récupérer les données du form quand il est soumis
-        $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
-            // enregistrer les donnees dans la base
-            $personne = $form->getData();
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($personne);
-            $em->flush();
-            // rediriger vers accueil avec un message de succes
-            return $this->redirectToRoute('listpersonne', array('message' => 'succès'));
-         }
-        // formulaire non valide ou 1er acces : afficher le formulaire
-        return $this->render('personne/form.twig', 
-                             array('form'=> $form->createView())) ;
-    }            
+    public function telechargerProduitAction(Request $request, $message) 
+    {
+        $em = $this->getDoctrine()->getManager();
+        $session = $request->getSession();
+        if( $session->get('access') == 'magasinier' )
+        {
+            $produits = $em->getRepository(Produit::class)->findAll();
+            $response = $this->render('produits/export.csv.twig',
+                                    array('produits' => $produits,
+                                        'msg' => $message)); 
+            $response->headers->set('Content-Type', 'text/csv');
+            $response->headers->set('Content-Disposition', 'attachment; filename="export.csv"');
+            return $response;
+        }
+    }           
 }

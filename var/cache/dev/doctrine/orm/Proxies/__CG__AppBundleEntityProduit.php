@@ -64,10 +64,10 @@ class Produit extends \AppBundle\Entity\Produit implements \Doctrine\ORM\Proxy\P
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'numproduit', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'nomproduit', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'prix', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'qte', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'visible'];
+            return ['__isInitialized__', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'numproduit', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'nomproduit', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'prix', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'qte', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'visible', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'descriptif', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'categorie', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'qtemin', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'peremption', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'photo'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'numproduit', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'nomproduit', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'prix', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'qte', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'visible'];
+        return ['__isInitialized__', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'numproduit', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'nomproduit', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'prix', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'qte', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'visible', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'descriptif', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'categorie', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'qtemin', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'peremption', '' . "\0" . 'AppBundle\\Entity\\Produit' . "\0" . 'photo'];
     }
 
     /**
@@ -179,7 +179,7 @@ class Produit extends \AppBundle\Entity\Produit implements \Doctrine\ORM\Proxy\P
     public function getNumproduit()
     {
         if ($this->__isInitialized__ === false) {
-            return  parent::getNumproduit();
+            return (int)  parent::getNumproduit();
         }
 
 
@@ -274,6 +274,127 @@ class Produit extends \AppBundle\Entity\Produit implements \Doctrine\ORM\Proxy\P
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getVisible', []);
 
         return parent::getVisible();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setNumproduit($numproduit)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setNumproduit', [$numproduit]);
+
+        return parent::setNumproduit($numproduit);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setDescriptif($descriptif)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setDescriptif', [$descriptif]);
+
+        return parent::setDescriptif($descriptif);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDescriptif()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getDescriptif', []);
+
+        return parent::getDescriptif();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCategorie($categorie)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setCategorie', [$categorie]);
+
+        return parent::setCategorie($categorie);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCategorie()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCategorie', []);
+
+        return parent::getCategorie();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setQtemin($qtemin)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setQtemin', [$qtemin]);
+
+        return parent::setQtemin($qtemin);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getQtemin()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getQtemin', []);
+
+        return parent::getQtemin();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setPeremption($peremption)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setPeremption', [$peremption]);
+
+        return parent::setPeremption($peremption);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPeremption()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPeremption', []);
+
+        return parent::getPeremption();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setPhoto($photo)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setPhoto', [$photo]);
+
+        return parent::setPhoto($photo);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPhoto()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPhoto', []);
+
+        return parent::getPhoto();
     }
 
 }

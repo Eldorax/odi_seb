@@ -15,11 +15,3 @@ insert into client values
 
 insert into magasinier values
 	('tata', 5, 1500);
-
-
-
-insert into produit values
-	(0, 'Patate', 42, 69, True);
-
-insert into produit values
-	(1, 'Secret', 50, 1, False);
