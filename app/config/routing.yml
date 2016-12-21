@@ -3,7 +3,9 @@ app:
     resource: "@AppBundle/Controller/"
     type:     annotation
 
-
+home:
+    path: /
+    defaults: {_controller: AppBundle:Default:home}
 
 interface_magasinier:
     path: /magasinier/interface
@@ -40,8 +42,8 @@ disconnect:
 
 
 interface_client:
-    path: /client/interface
-    defaults: {_controller: AppBundle:Client:interface}
+    path: /client/interface/{message}
+    defaults: {_controller: AppBundle:Client:interface, message: ''}
 
 panier_list:
     path: /panier/list/{message}

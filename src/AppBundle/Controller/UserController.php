@@ -44,10 +44,18 @@ class UserController extends Controller{
                 if( count($em->find(Magasinier::class, $key)) === 1)
                 {
                     $session->set('access', 'magasinier');
+                    return $this->redirectToRoute('interface_magasinier',
+                            array('message' => 'Connecté en tant que '
+                            . $user->getLogin() . 
+                            '(' . $session->get('access') .')' ));
                 }
                 else
                 {
                     $session->set('access', 'client');
+                    return $this->redirectToRoute('interface_client',
+                            array('message' => 'Connecté en tant que '
+                            . $user->getLogin() . 
+                            '(' . $session->get('access') .')' ));
                 }
                 
                 return $this->redirectToRoute('listproduit',

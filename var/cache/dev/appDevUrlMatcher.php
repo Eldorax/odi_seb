@@ -100,6 +100,15 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
 
         }
 
+        // home
+        if (rtrim($pathinfo, '/') === '') {
+            if (substr($pathinfo, -1) !== '/') {
+                return $this->redirect($pathinfo.'/', 'home');
+            }
+
+            return array (  '_controller' => 'AppBundle\\Controller\\DefaultController::homeAction',  '_route' => 'home',);
+        }
+
         // interface_magasinier
         if ($pathinfo === '/magasinier/interface') {
             return array (  '_controller' => 'AppBundle\\Controller\\MagasinierController::interfaceAction',  '_route' => 'interface_magasinier',);
@@ -146,8 +155,8 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
         }
 
         // interface_client
-        if ($pathinfo === '/client/interface') {
-            return array (  '_controller' => 'AppBundle\\Controller\\ClientController::interfaceAction',  '_route' => 'interface_client',);
+        if (0 === strpos($pathinfo, '/client/interface') && preg_match('#^/client/interface(?:/(?P<message>[^/]++))?$#s', $pathinfo, $matches)) {
+            return $this->mergeDefaults(array_replace($matches, array('_route' => 'interface_client')), array (  '_controller' => 'AppBundle\\Controller\\ClientController::interfaceAction',  'message' => '',));
         }
 
         // panier_list
