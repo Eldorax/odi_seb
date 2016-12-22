@@ -12,7 +12,7 @@ AppBundle\Entity\Panier:
         etat:
             type: string
             nullable: false
-            columnDefinition: ENUM('Non validé', 'En cours de traitement', 'Traité')
+            columnDefinition: ENUM('Non validé', 'En cours de traitement', 'Traité',)
         login:
             associationKey: true
     manyToOne:

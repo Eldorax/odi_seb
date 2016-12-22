@@ -20,22 +20,30 @@
        </div>
     {% endif %}
     
-    <h1> <i class="fa fa-users fa-lg"></i> Produits disponnible </h1>
+    <h1> <i class="fa fa-arrow-circle-right fa-lg"></i> Produits disponible </h1>
     {% if produits %}
     <table class="table table-striped" id='tab'>
         <thead>
             <tr>
-                <th>NomProduit</th>
-                <th>Prix</th>
+                <th>Nom</th>
+                <th>Descriptif</th>
+                <th>Catégorie</th>
                 <th>Quantité</th>
+                <th>Prix</th>
+                <th>Péremption</th>
+                <th>Photo</th>
             </tr>
         </thead>
         <tbody>
         {% for produit in produits %}
             <tr>
                 <td>{{ produit.nomproduit }}</td>
-                <td>{{ produit.prix }}</td>
-                <td>{{ produit.qte }}</td>
+                <td>{{ produit.descriptif }}</td>
+                <td>{{ produit.categorie  }}</td>
+                <td>{{ produit.qte        }}</td>
+                <td>{{ produit.prix       }}€</td>
+                <td>{{ produit.peremption|date('Y-m-d') }}</td>
+                <td><img src="{{ produit.photo }}"></td>
                 <td>
                     <div class="item-actions">
                         <a href="{{ path('add_produit_panier',
@@ -57,7 +65,7 @@
     {% endif %}
     
     
-     <h1> <i class="fa fa-users fa-lg"></i> Panier actuel </h1>
+     <h1> <i class="fa fa-shopping-basket fa-lg"></i> Panier actuel </h1>
     {% if produit_dans_panier %}
     <table class="table table-striped" id='tab'>
         <thead>
@@ -70,7 +78,7 @@
         {% for p in produit_dans_panier %}
             <tr>
                 <td>{{ p.numproduit.nomproduit }}</td>
-                <td>{{ p.qtecmd               }}</td>
+                <td>{{ p.qtecmd                }}</td>
                 <td>
                     <div class="item-actions">
                         <a href="{{ path('delete_produit_panier',
@@ -78,7 +86,7 @@
                                       numproduit: p.numproduit.numproduit
                                     })
                                  }}"
-                           class="btn btn-sm btn-primary" title="Supprimer">
+                            class="btn btn-sm btn-primary" title="Supprimer">
                             <i class="fa fa-trash-o"></i>
                         </a> 
                     </div>
@@ -90,5 +98,13 @@
     {% else %}
        Aucun produit dans le panier.
     {% endif %}
-    
+    </br>
+    <a href="{{ path('valid_panier',
+                    { numpanier: numpanier })
+                 }}"> Valider le panier
+           
+    </a> 
+    </br>
+
+    <a href="{{path('interface_client')}}">retour accueil</a>
 {% endblock %}

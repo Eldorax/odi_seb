@@ -60,7 +60,7 @@ class ClientController extends Controller{
             $key     = array("numpanier" => $numpanier);
             $p       = $em->find(Panier::class, $key);
             
-            if( $p->getLogin() == $session->get('login') )
+            if( $p->getLogin() == $session->get('login')  && $p->getEtat() == 'Non validé')
             {
                 $this->deleteProduitsFromPanier($p->getNumpanier());
                 $em->remove($p);
@@ -87,8 +87,8 @@ class ClientController extends Controller{
         {
            //pas client -> redirection
            return $this->redirectToRoute('listproduit',
-                    array('message' => 'vous n\'etes pas autoriser à voir cette'
-                        . 'cette page redirection...'));
+                    array('message' => 'vous n\'etes pas autoriser à voir'
+                          . 'cette page redirection...'));
         }
         else
         {
@@ -96,7 +96,7 @@ class ClientController extends Controller{
             $key     = array("numpanier" => $numpanier);
             $p       = $em->find(Panier::class, $key);
             
-            if( $p->getLogin() == $session->get('login') )
+            if( $p->getLogin() == $session->get('login') && $p->getEtat() == 'Non validé')
             {
                 $produits = 
                         $em->getRepository(Produit::class)
@@ -119,6 +119,71 @@ class ClientController extends Controller{
             }
         }
     }
+    
+    //Modification d'un panier
+    public function voirPanierAction(Request $request, $numpanier)
+    {
+        //Vérification du client
+        $session = $request->getSession();
+        if( $session->get('access') != 'client' )
+        {
+           //pas client -> redirection
+           return $this->redirectToRoute('listproduit',
+                    array('message' => 'vous n\'etes pas autoriser à voir'
+                          . 'cette page redirection...'));
+        }
+        else
+        {
+            $em      = $this->getDoctrine()->getManager();
+            $key     = array("numpanier" => $numpanier);
+            $p       = $em->find(Panier::class, $key);
+            
+            if( $p->getLogin() == $session->get('login') )
+            {
+                $produit_dans_panier = 
+                        $em->getRepository(Produit_dans_panier::class)
+                            ->findBy(array('numpanier' => $numpanier));
+                
+                return $this->render('panier/voir.twig',
+                                    array('produit_dans_panier' => $produit_dans_panier,
+                                          'numpanier'           => $numpanier
+                                    ));
+            }
+            else
+            {   // pas le panier du bon client
+                return $this->redirectToRoute('listproduit',
+                    array('message' => 'vous n\'etes pas autoriser à voir cette'
+                        . 'cette page redirection...'));
+            }
+        }
+    }
+    
+    //Validation du $numpanier
+    public function validPanierAction(Request $request, $numpanier)
+    {
+        //Vérification du client
+        $session = $request->getSession();
+        if( $session->get('access') == 'client' )
+        { 
+            $em      = $this->getDoctrine()->getManager();
+            $key     = array("numpanier" => $numpanier);
+            $p       = $em->find(Panier::class, $key);
+            
+            if( $p->getLogin() == $session->get('login') && $p->getEtat() == 'Non validé')
+            {
+                $p->setEtat('En cours de traitement');
+                $em->persist($p);
+                $em->flush();
+                return $this->redirectToRoute('panier_list',
+                    array('message' => 'Panier validé'));
+            }
+        }
+        //mauvais user ou panier
+        return $this->redirectToRoute('listproduit',
+                    array('message' => 'vous n\'etes pas autoriser à voir cette'
+                        . 'cette page redirection...'));
+    }
+    
     
     //Supprime un produit d'un panier
     public function DeleteproduitPanierAction(Request $request, $numpanier, $numproduit)

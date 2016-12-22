@@ -130,6 +130,11 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
                 return array (  '_controller' => 'AppBundle\\Controller\\ProduitController::telechargerProduitAction',  'message' => '',  '_route' => 'telechargement',);
             }
 
+            // alerte
+            if ($pathinfo === '/produits/alerte') {
+                return array (  '_controller' => 'AppBundle\\Controller\\ProduitController::alerteProduitAction',  'message' => '',  '_route' => 'alerte',);
+            }
+
             // listproduit
             if (0 === strpos($pathinfo, '/produits/list') && preg_match('#^/produits/list(?:/(?P<message>[^/]++))?$#s', $pathinfo, $matches)) {
                 return $this->mergeDefaults(array_replace($matches, array('_route' => 'listproduit')), array (  '_controller' => 'AppBundle\\Controller\\ProduitController::listProduitAction',  'message' => '',));
@@ -173,6 +178,19 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
             // delete_panier
             if (0 === strpos($pathinfo, '/panier/delete') && preg_match('#^/panier/delete(?:/(?P<numpanier>[^/]++))?$#s', $pathinfo, $matches)) {
                 return $this->mergeDefaults(array_replace($matches, array('_route' => 'delete_panier')), array (  '_controller' => 'AppBundle\\Controller\\ClientController::DeletePanierAction',  'numpanier' => 0,));
+            }
+
+            if (0 === strpos($pathinfo, '/panier/v')) {
+                // valid_panier
+                if (0 === strpos($pathinfo, '/panier/valid') && preg_match('#^/panier/valid(?:/(?P<numpanier>[^/]++))?$#s', $pathinfo, $matches)) {
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'valid_panier')), array (  '_controller' => 'AppBundle\\Controller\\ClientController::validPanierAction',  'numpanier' => 0,));
+                }
+
+                // voir_panier
+                if (0 === strpos($pathinfo, '/panier/voir') && preg_match('#^/panier/voir(?:/(?P<numpanier>[^/]++))?$#s', $pathinfo, $matches)) {
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'voir_panier')), array (  '_controller' => 'AppBundle\\Controller\\ClientController::voirPanierAction',  'numpanier' => 0,));
+                }
+
             }
 
             // new_panier

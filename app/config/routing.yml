@@ -22,6 +22,10 @@ modifierstock:
 telechargement:
     path: /produits/telechargement
     defaults: {_controller: AppBundle:Produit:telechargerProduit, message: ''}
+    
+alerte:
+    path: /produits/alerte
+    defaults: {_controller: AppBundle:Produit:alerteProduit, message: ''}
 
 listproduit:
     path: /produits/list/{message}
@@ -56,6 +60,14 @@ panier_mod:
 delete_panier:
     path: /panier/delete/{numpanier}
     defaults: {_controller: AppBundle:Client:DeletePanier, numpanier: 0}
+    
+valid_panier:
+    path: /panier/valid/{numpanier}
+    defaults: {_controller: AppBundle:Client:validPanier, numpanier: 0}
+    
+voir_panier:
+    path: /panier/voir/{numpanier}
+    defaults: {_controller: AppBundle:Client:voirPanier, numpanier: 0}
     
 new_panier:
     path: /panier/create

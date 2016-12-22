@@ -110,7 +110,8 @@ class ProduitController extends Controller {
         }
         else
         {
-            
+            return $this->redirectToRoute('listproduit',
+                    array('message' => "vous n'avez pas accés à cette page"));
         }
     }
     
@@ -139,7 +140,8 @@ class ProduitController extends Controller {
         }
         else
         {
-            
+            return $this->redirectToRoute('listproduit',
+                    array('message' => "vous n'avez pas accés à cette page"));
         }
     }
     public function telechargerProduitAction(Request $request, $message) 
@@ -156,5 +158,33 @@ class ProduitController extends Controller {
             $response->headers->set('Content-Disposition', 'attachment; filename="export.csv"');
             return $response;
         }
-    }           
+        else 
+        {
+            return $this->redirectToRoute('listproduit',
+                    array('message' => "vous n'avez pas accés à cette page"));
+        }
+    }
+    public function alerteProduitAction(Request $request, $message) 
+    {
+        $em = $this->getDoctrine()->getManager();
+        $session = $request->getSession();
+        if( $session->get('access') == 'magasinier' )
+        {
+            $dateactu = date('Y-m-d');
+            $query = $em->createQuery("SELECT p FROM AppBundle:Produit p WHERE p.qte < p.qtemin");
+            $produitsqte = $query->getResult();
+            $query = $em->createQuery("SELECT p FROM AppBundle:Produit p WHERE p.peremption < '".$dateactu."'");
+            $produitsperim = $query->getResult();
+            return $this->render('produits/alerte.html.twig',
+                                    array('produitsqte' => $produitsqte,
+                                        'produitsperim' => $produitsperim,
+                                        'msg' => $message));
+        }
+        else 
+        {
+            return $this->redirectToRoute('listproduit',
+                    array('message' => "vous n'avez pas accés à cette page"));
+        }
+    }
+    
 }

@@ -20,7 +20,7 @@
        </div>
     {% endif %}
     
-    <h1><i class="fa fa-users fa-lg"></i> Paniers</h1>
+    <h1><i class="fa fa-shopping-basket fa-lg"></i> Paniers</h1>
 
     {% if paniers %}
     <table class="table table-striped" id='tab'>
@@ -37,21 +37,35 @@
                 <td>{{ panier.etat }}</td>
                 <td>
                     <div class="item-actions">
+                        <a href="{{ path('voir_panier', 
+                                    { numpanier: panier.numpanier }) }}" 
+                           class="btn btn-sm btn-primary" title="Voir">
+                            <i class="fa fa-info fa-lg"></i>
+                        </a> 
+                    </div>
+                </td>
+                <td>
+                {% if panier.etat == "Non validé" %}
+                    <div class="item-actions">
                         <a href="{{ path('panier_mod', 
                                     { numpanier: panier.numpanier }) }}" 
                            class="btn btn-sm btn-primary" title="modifier">
                             <i class="fa fa-pencil fa-lg"></i>
                         </a> 
                     </div>
+               
+                {% endif %}
                 </td>
                 <td>
-                    <div class="item-actions">
-                        <a href="{{ path('delete_panier', 
-                                    { numpanier: panier.numpanier }) }}" 
-                           class="btn btn-sm btn-primary" title="Supprimer">
-                            <i class="fa fa-trash-o fa-lg"></i>
-                        </a> 
-                    </div>
+                    {% if panier.etat == "Non validé" %}
+                        <div class="item-actions">
+                            <a href="{{ path('delete_panier', 
+                                        { numpanier: panier.numpanier }) }}" 
+                               class="btn btn-sm btn-primary" title="Supprimer">
+                                <i class="fa fa-trash-o fa-lg"></i>
+                            </a> 
+                        </div>
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}
@@ -62,4 +76,5 @@
     {% else %}
        Aucun panier créé.
     {% endif %}
+    <a href="{{path('interface_client')}}">retour accueil</a>
 {% endblock %}
